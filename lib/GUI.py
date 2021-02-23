@@ -28,22 +28,58 @@ TK_SILENCE_DEPRECATION=1
 root.title("Linear Transformation Visualization")
 hei = 800; wid = hei * 3/2
 canvas = tk.Canvas(root, height = hei, width = wid, bg="#ffffff")
+matrix = np.array([[1,0],[0,1]])
 #add Entry Fields and Label to window for matrix
 lab = Label(canvas, text = "Enter a real 2x2 matrix:"); lab.place(x = hei+hei/6-100, y = 0, width = 200, height = 50)
 entryA11 = Entry(master = canvas, bg = "white"); entryA11.place(x = hei+hei/6-75, y = 50, width = 100, height = 50)
 entryA12 = Entry(master = canvas, bg = "white"); entryA12.place(x = hei+hei/6+50, y = 50, width = 100, height = 50)
 entryA21 = Entry(master = canvas, bg = "white"); entryA21.place(x = hei+hei/6-75, y = 100, width = 100, height = 50)
 entryA22 = Entry(master = canvas, bg = "white"); entryA22.place(x = hei+hei/6+50, y = 100, width = 100, height = 50)
-transBut = Button(master = canvas, text = "Transform", command = tranformVectors); transBut.place(x = hei+hei/6-75, y = 150, width = 100, height = 50)
-#add Entry Fields, Label + Button for adding a Vector
-labVec = Label(master = canvas, text = "Enter a real 2x1 vector:"); labVec.place(x = hei+hei/6-75, y = 200, width = 150, height = 50)
-entryV1 = Entry(master = canvas, bg = "white"); entryV1.place(x = hei+hei/6-75, y = 250, width = 100, height = 50)
-entryV2 = Entry(master = canvas, bg = "white"); entryV2.place(x = hei+hei/6-75, y = 300, width = 100, height = 50)
-addBut = Button(master = canvas, text = "Add Vector", command = addVec); addBut.place(x = hei+hei/6+50, y = 250, width = 100, height = 50)
-#save the neutral matrix for the matrix value
-matrix = np.array([[1,0],[0,1]])
+
+#drop Down menu
+Optionlist = ["Vector Transformation", "Grid Transformation", "Determinant Animation"]
+OpenWidgets = []
+VTWWidgets = []
+GTWWidgets = []
+DAWWidgets = []
+var = tk.StringVar(canvas)
+var.set(Optionlist[0])
+opt = tk.OptionMenu(canvas, var, *Optionlist)
+opt.place(x = hei+hei/6-75, y = 150, width = 200, height = 50)
+labMod = Label(master = canvas, text = "Vector Transformation"); labMod.place(x = hei+hei/6-100, y = 200, width = 200, height = 50)
+def callback(*args):
+    forgetAllOpenWidgets()
+    if var.get() == "Vector Transformation": openVTW()
+    if var.get() == "Grid Transformation": openGTW()
+    if var.get() == "Determinant Animation": openDAW()
+    labMod.config(text = var.get())
+def forgetAllOpenWidgets():
+    for wid in OpenWidgets:
+        wid.place_forget()
+
+var.trace("w", callback)
+
+def openVTW():
+    for wid in VTWWidgets:
+        wid.place()
+def openGTW():
+    for wid in GTWWidgets:  
+        wid.place()
+def openDAW():
+    for wid in DAWWidgets:
+        wid.place()
+
+#Vector Transformation Widgets
+labVec = Label(master = canvas, text = "Enter a real 2x1 vector:"); labVec.place(x = hei+hei/6-75, y = 400, width = 150, height = 50)
+entryV1 = Entry(master = canvas, bg = "white"); entryV1.place(x = hei+hei/6-75, y = 450, width = 100, height = 50)
+entryV2 = Entry(master = canvas, bg = "white"); entryV2.place(x = hei+hei/6-75, y = 500, width = 100, height = 50)
+addBut = Button(master = canvas, text = "Add Vector", command = addVec); addBut.place(x = hei+hei/6+50, y = 450, width = 100, height = 50)
+transBut = Button(master = canvas, text = "Transform", command = tranformVectors); transBut.place(x = hei+hei/6-75, y = 550, width = 100, height = 50)
+OpenWidgets.append(labVec); OpenWidgets.append(entryV1); OpenWidgets.append(entryV2); OpenWidgets.append(addBut); OpenWidgets.append(transBut)
 vectors = []
 transvectors = []; trans = False
+
+
 
 def drawcoSys():
     canvas.create_rectangle(0,0, hei, hei, fill="black")
@@ -115,8 +151,8 @@ def addtransVec():
         if abs(tv[0]) > maxV: maxV = abs(tv[0]); loop()
         if abs(tv[1]) > maxV: maxV = abs(tv[1]); loop()
         transvectors.append(tv)
-    print("In add transVec")
-    print(transvectors[0][0], transvectors[0][1])
+    #print("In add transVec")
+    #print(transvectors[0][0], transvectors[0][1])
     
 def transformVec(v = np.array):
     tv = matrix.dot(v)
