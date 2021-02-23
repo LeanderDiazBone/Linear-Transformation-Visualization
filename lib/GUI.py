@@ -13,7 +13,6 @@ def addVec():
         global maxV
         if abs(v1) > maxV: maxV = abs(v1)
         if abs(v2) > maxV: maxV = abs(v2)
-
         vectors.append(vec)
     except Exception:
         v = 1
@@ -39,47 +38,70 @@ entryA22 = Entry(master = canvas, bg = "white"); entryA22.place(x = hei+hei/6+50
 #drop Down menu
 Optionlist = ["Vector Transformation", "Grid Transformation", "Determinant Animation"]
 OpenWidgets = []
-VTWWidgets = []
-GTWWidgets = []
-DAWWidgets = []
+VTWWidgets = []; VTWPlaces = []
+GTWWidgets = []; GTWPlaces = []
+DAWWidgets = []; DAWPlaces = []
 var = tk.StringVar(canvas)
 var.set(Optionlist[0])
 opt = tk.OptionMenu(canvas, var, *Optionlist)
 opt.place(x = hei+hei/6-75, y = 150, width = 200, height = 50)
-labMod = Label(master = canvas, text = "Vector Transformation"); labMod.place(x = hei+hei/6-100, y = 200, width = 200, height = 50)
 def callback(*args):
     forgetAllOpenWidgets()
-    if var.get() == "Vector Transformation": openVTW()
-    if var.get() == "Grid Transformation": openGTW()
-    if var.get() == "Determinant Animation": openDAW()
-    labMod.config(text = var.get())
+    print("IN CALLBACK")
+    if var.get() == "Vector Transformation": openVTW(); print("IN VT")
+    if var.get() == "Grid Transformation": openGTW(); print("IN GT")
+    if var.get() == "Determinant Animation": openDAW(); print("IN DA")
+
 def forgetAllOpenWidgets():
+    global OpenWidgets
     for wid in OpenWidgets:
         wid.place_forget()
+    OpenWidgets = []
 
 var.trace("w", callback)
 
 def openVTW():
+    i = 0
     for wid in VTWWidgets:
-        wid.place()
+        l = VTWPlaces[i]
+        wid.place(x = l[0], y = l[1], width = l[2], height = l[3])
+        OpenWidgets.append(wid)
+        i += 1  
 def openGTW():
+    i = 0
     for wid in GTWWidgets:  
-        wid.place()
+        #print(len(GTWWidgets))
+        l = GTWPlaces[i]
+        wid.place(x = l[0], y = l[1], width = l[2], height = l[3])
+        OpenWidgets.append(wid)
+        i += 1  
 def openDAW():
+    i = 0
     for wid in DAWWidgets:
-        wid.place()
+        l = DAWPlaces[i]
+        wid.place(x = l[0], y = l[1], width = l[2], height = l[3])
+        OpenWidgets.append(wid)
+        i += 1  
 
 #Vector Transformation Widgets
-labVec = Label(master = canvas, text = "Enter a real 2x1 vector:"); labVec.place(x = hei+hei/6-75, y = 400, width = 150, height = 50)
-entryV1 = Entry(master = canvas, bg = "white"); entryV1.place(x = hei+hei/6-75, y = 450, width = 100, height = 50)
-entryV2 = Entry(master = canvas, bg = "white"); entryV2.place(x = hei+hei/6-75, y = 500, width = 100, height = 50)
-addBut = Button(master = canvas, text = "Add Vector", command = addVec); addBut.place(x = hei+hei/6+50, y = 450, width = 100, height = 50)
-transBut = Button(master = canvas, text = "Transform", command = tranformVectors); transBut.place(x = hei+hei/6-75, y = 550, width = 100, height = 50)
-OpenWidgets.append(labVec); OpenWidgets.append(entryV1); OpenWidgets.append(entryV2); OpenWidgets.append(addBut); OpenWidgets.append(transBut)
+labModVTW = Label(master = canvas, text = "Vector Transformation"); labModVTW.place(x = hei+hei/6-75, y = 300, width = 150, height = 50); VTWPlaces.append([hei+hei/6-75, 300, 150, 50])
+labVec = Label(master = canvas, text = "Enter a real 2x1 vector:"); labVec.place(x = hei+hei/6-75, y = 400, width = 150, height = 50); VTWPlaces.append([hei+hei/6-75, 400, 150, 50])
+entryV1 = Entry(master = canvas, bg = "white"); entryV1.place(x = hei+hei/6-75, y = 450, width = 100, height = 50); VTWPlaces.append([hei+hei/6-75, 450, 100, 50])
+entryV2 = Entry(master = canvas, bg = "white"); entryV2.place(x = hei+hei/6-75, y = 500, width = 100, height = 50); VTWPlaces.append([hei+hei/6-75, 500, 100, 50])
+addBut = Button(master = canvas, text = "Add Vector", command = addVec); addBut.place(x = hei+hei/6+50, y = 450, width = 100, height = 50); VTWPlaces.append([hei+hei/6+50, 450, 100, 50])
+transBut = Button(master = canvas, text = "Transform", command = tranformVectors); transBut.place(x = hei+hei/6-75, y = 550, width = 100, height = 50); VTWPlaces.append([hei+hei/6-75, 550, 100, 50])
+VTWWidgets.append(labModVTW); VTWWidgets.append(labVec); VTWWidgets.append(entryV1); VTWWidgets.append(entryV2); VTWWidgets.append(addBut); VTWWidgets.append(transBut)
+for wid in VTWWidgets: OpenWidgets.append(wid)
 vectors = []
 transvectors = []; trans = False
 
+#Grid Tranformation Widgets
+labModGTW = Label(master = canvas, text = "Grid Transformation"); GTWPlaces.append([hei+hei/6-75, 300, 150, 50])
+GTWWidgets.append(labModGTW)
 
+#Determinant Animation Widgets
+labModDAW = Label(master = canvas, text = "Determinant Animation"); DAWPlaces.append([hei+hei/6-75, 300, 150, 50])
+DAWWidgets.append(labModDAW)
 
 def drawcoSys():
     canvas.create_rectangle(0,0, hei, hei, fill="black")
